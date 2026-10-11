@@ -32,15 +32,34 @@ environment variables; never commit `.env.local`.
 
 ## Manage content
 
-Sign in to add, edit, and remove projects using the project editor. Use
-“Edit all portfolio content” to change any other text, links, page sections,
-toolkit items, and settings in the same admin interface. Click “Save changes”
-to write the updates to MongoDB. Unsupported `javascript:`, `data:`, and
-`vbscript:` URLs are rejected.
+Sign in to add, edit, and remove projects using the project editor. Under
+“Website content”, choose a clearly named section such as “Homepage intro”,
+“About you”, or “Contact & social links” and update its labeled fields. Use
+“Save changes” to publish text and project edits. Removing a project saves
+immediately. Unsupported `javascript:`, `data:`, and `vbscript:` URLs are
+rejected.
 
-Project images and videos can use public URLs or files placed in `public/assets/`
-(for example, `/assets/my-project.jpg`). The initial assets and visual styles are
-copied from the original project.
+### Project thumbnails
+
+For a free hosted image library and CDN, Cloudinary's Free plan is the easiest
+fit for this project: it stores images and delivers optimized versions without
+needing to add them to the repository. Free-plan quotas and features can change,
+so check Cloudinary's current plan details before relying on a specific limit.
+
+1. Create a free account at [cloudinary.com](https://cloudinary.com/).
+2. Copy the cloud name, API key, and API secret from the Cloudinary dashboard.
+3. Add them to `.env.local` as `CLOUDINARY_CLOUD_NAME`,
+   `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET`, then restart Next.js.
+   Add the same values to your production host's environment settings. Never
+   expose the API secret in frontend code or a `NEXT_PUBLIC_` variable.
+4. In the admin studio, choose a project, select a JPG, PNG, WebP, or GIF
+   thumbnail (up to 5 MB), then click “Save changes” to publish its URL.
+
+The upload endpoint requires an active admin session and sends images to
+Cloudinary from the server using a signed request. Project images and videos
+can also use public URLs or files placed in `public/assets/` (for example,
+`/assets/my-project.jpg`). The initial assets and visual styles are copied from
+the original project.
 
 ## Production
 

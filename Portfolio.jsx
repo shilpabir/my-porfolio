@@ -29,11 +29,34 @@ function getYouTubeId(url = "") {
 }
 
 function getPosterUrl(project) {
-  if (project.thumbnail) return project.thumbnail;
-  const videoId = getYouTubeId(project.videoUrl);
-  return videoId
-    ? `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`
-    : "";
+  return project.thumbnail || "";
+}
+
+function YouTubeThumbnail({ videoId, className, alt, priority = false }) {
+  const thumbnailSizes = ["maxresdefault", "sddefault", "hqdefault", "mqdefault"];
+  const [sizeIndex, setSizeIndex] = useState(0);
+  const src = `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/${thumbnailSizes[sizeIndex]}.jpg`;
+
+  function useNextSize() {
+    setSizeIndex((currentIndex) =>
+      Math.min(currentIndex + 1, thumbnailSizes.length - 1),
+    );
+  }
+
+  return (
+    <img
+      className={className}
+      src={src}
+      alt={alt}
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : "auto"}
+      onError={useNextSize}
+      onLoad={(event) => {
+        const { naturalWidth, naturalHeight } = event.currentTarget;
+        if (naturalWidth < 640 && naturalHeight < 640) useNextSize();
+      }}
+    />
+  );
 }
 
 function getPlayer(project) {
@@ -84,6 +107,7 @@ function ProjectCard({ siteConfig, project, index, onOpen }) {
   const cardRef = useRef(null);
   const localVideo = localVideoPattern.test(project.videoUrl || "");
   const poster = getPosterUrl(project);
+  const youtubeId = !project.thumbnail ? getYouTubeId(project.videoUrl) : "";
   const artwork = project.artwork
     .split("\n")
     .map((line, lineIndex) => (
@@ -153,6 +177,13 @@ function ProjectCard({ siteConfig, project, index, onOpen }) {
             playsInline
             preload="none"
             aria-hidden="true"
+          />
+        ) : youtubeId ? (
+          <YouTubeThumbnail
+            key={youtubeId}
+            videoId={youtubeId}
+            alt={`${project.title} thumbnail`}
+            className="youtube-thumbnail"
           />
         ) : poster ? (
           <img
@@ -508,10 +539,16 @@ export default function Portfolio({ siteConfig }) {
             aria-label="Featured reel preview"
             data-parallax
             ref={heroVisualRef}
-            style={heroYouTubeId ? {
-              backgroundImage: `url("https://i.ytimg.com/vi/${encodeURIComponent(heroYouTubeId)}/hqdefault.jpg")`,
-            } : undefined}
           >
+            {heroYouTubeId && (
+              <YouTubeThumbnail
+                key={heroYouTubeId}
+                videoId={heroYouTubeId}
+                alt=""
+                className="hero-visual-youtube-thumb"
+                priority
+              />
+            )}
             {heroPlayer?.type === "file" && (
               <video
                 className="featured-reel-video"
