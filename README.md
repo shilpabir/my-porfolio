@@ -64,5 +64,7 @@ the original project.
 ## Production
 
 Configure the same environment variables with a production MongoDB URL and
-strong, unique admin credentials, then run `npm run build` and `npm start`.
+strong, unique admin credentials. Set `SITE_URL` to your public HTTPS domain
+(for example, `https://your-domain.com`) so shared links can use the correct
+absolute image URL in social previews. Then run `npm run build` and `npm start`.
 Use HTTPS in production so the admin session cookie is marked secure.

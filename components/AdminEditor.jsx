@@ -79,8 +79,8 @@ const contentFieldLabels = {
   image: "Portrait image URL",
   imageAlt: "Portrait description",
   featuredVideo: "Featured video link",
-  featuredVideoLabel: "Video label",
-  featuredVideoNote: "Video description",
+  featuredVideoLabel: "Featured reel title",
+  featuredVideoNote: "Featured reel description",
   playLabel: "Play button text",
   visualHint: "Video hint",
   visualCredit: "Video credit",
@@ -158,6 +158,12 @@ function getContentFieldHint(path) {
   }
   if (fieldPath === "hero.featuredVideo") {
     return "Paste a YouTube, Vimeo, or video-file link.";
+  }
+  if (fieldPath === "hero.featuredVideoLabel") {
+    return "This title appears on the featured reel and in its video details.";
+  }
+  if (fieldPath === "hero.featuredVideoNote") {
+    return "A short description shown with the featured reel and in its video details.";
   }
   if (fieldPath === "contact.email") {
     return "Visitors will use this address to email you.";

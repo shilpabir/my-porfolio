@@ -69,7 +69,7 @@ function getPlayer(project) {
   if (youtubeId) {
     return {
       type: "embed",
-      src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?autoplay=1&mute=1&playsinline=1`,
+      src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?autoplay=1&playsinline=1`,
     };
   }
 
@@ -83,7 +83,7 @@ function getPlayer(project) {
       if (/^\d+$/.test(id || "")) {
         return {
           type: "embed",
-          src: `https://player.vimeo.com/video/${id}?autoplay=1&muted=1`,
+          src: `https://player.vimeo.com/video/${id}?autoplay=1`,
         };
       }
     }
@@ -284,7 +284,6 @@ function ProjectModal({ siteConfig, project, onClose }) {
               poster={poster}
               controls
               autoPlay
-              muted
               playsInline
             />
           )}
@@ -338,10 +337,12 @@ export default function Portfolio({ siteConfig }) {
   const heroProject = useMemo(
     () => ({
       id: "featured-reel",
-      title: "Featured reel",
-      categoryLabel: siteConfig.hero.featuredVideoLabel,
+      title: siteConfig.hero.featuredVideoLabel || "Featured reel",
+      categoryLabel: siteConfig.hero.featuredVideoLabel || "FEATURED REEL",
       role: `${siteConfig.name} — ${siteConfig.role}`,
-      description: siteConfig.hero.featuredVideoNote,
+      description:
+        siteConfig.hero.featuredVideoNote ||
+        `Featured video by ${siteConfig.name}.`,
       videoUrl: siteConfig.hero.featuredVideo || heroFeaturedProject?.videoUrl || "",
       thumbnail: siteConfig.hero.image,
     }),
@@ -535,7 +536,7 @@ export default function Portfolio({ siteConfig }) {
             />
           </div>
           <div
-            className="hero-visual"
+            className={`hero-visual${heroYouTubeId || heroPlayer?.type === "file" ? " has-featured-media" : ""}`}
             aria-label="Featured reel preview"
             data-parallax
             ref={heroVisualRef}
@@ -565,7 +566,7 @@ export default function Portfolio({ siteConfig }) {
             <div className="visual-orb orb-one" />
             <div className="visual-orb orb-two" />
             <div className="visual-label label-left">
-              <span>{siteConfig.hero.featuredVideoLabel}</span>
+              <span>{siteConfig.hero.featuredVideoLabel || "FEATURED REEL"}</span>
               <small>{siteConfig.hero.featuredVideoNote}</small>
             </div>
             {/* <div className="visual-center-mark">{siteConfig.ui.heroMark}<span>✳</span></div> */}
